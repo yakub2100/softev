@@ -32,7 +32,9 @@ public class Main extends JFrame{
 	private JTextArea tfText;
 	private JTextArea mcText;
 	private JTextArea shText;
+	private JTextArea eText;
 	private JTextArea nText;
+	private JTextArea dText;
 	private int row =4,matchRow=2, matchRowlbl=1, rowSh=4;
 	private JPanel multipleChoice;
 	private JPanel matching;
@@ -48,6 +50,8 @@ public class Main extends JFrame{
 	private JTextField shTitle;
 	private JTextField nTitle;
 	private JTextField nError;
+	private JTextField dTitle;
+	private JTextField eTitle;
 	
 	public Main() {
 		//setting up main frame
@@ -270,19 +274,80 @@ public class Main extends JFrame{
 		JButton btnAddAnotherMultipleN = new JButton("Add Another Multiple Choice Question");
 		numer.add(btnAddAnotherMultipleN, "cell 1 8,alignx center");
 		
-		
-		
-		JPanel calc = new JPanel();
-		tabbedPane.addTab("Calculated", null, calc, null);
-		calc.setLayout(new MigLayout("", "[]", "[]"));
-		
 		JPanel essay = new JPanel();
-		tabbedPane.addTab("Essey", null, essay, null);
-		essay.setLayout(new MigLayout("", "[]", "[]"));
+		tabbedPane.addTab("Essay", null, essay, null);
+		essay.setLayout(new MigLayout("", "[][grow][grow]", "[][186.00][][][][][][][][]"));
+		essay.setBackground(bgr);
+		
+		JLabel lblQuestionE = new JLabel("Question");
+		
+		JLabel lblQuestionTitleoptionaE = new JLabel("Question Title(Optional)");
+		essay.add(lblQuestionTitleoptionaE, "cell 0 0,alignx trailing");
+		
+		eTitle = new JTextField();
+		essay.add(eTitle, "cell 1 0,growx,spanx 3");
+		eTitle.setColumns(10);
+		essay.add(lblQuestionE, "cell 0 1,alignx right,aligny top");
+		
+		eText =new JTextArea (5,20);
+		
+		JScrollPane scrollPaneE = new JScrollPane(eText);
+		essay.add(scrollPaneE, "cell 1 1,span 3,grow");
+		
+		JButton btnDeleteclearQuestionTextE = new JButton("Cancel/Clear Question Text");
+		essay.add(btnDeleteclearQuestionTextE, "cell 2 2,alignx right");
+		
+		btnDeleteclearQuestionTextE.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				eText.setText("");
+			}
+		});
+		
+		JButton btnSaveE = new JButton("Save");
+		essay.add(btnSaveE, "cell 0 4,alignx center,aligny center");
+		
+		JButton btnAddAnotherE = new JButton("Add Another Essay");
+		essay.add(btnAddAnotherE, "cell 1 8,alignx center");
+		
+		
+		
+		
+		
 		
 		JPanel desc = new JPanel();
 		tabbedPane.addTab("Description", null, desc, null);
-		desc.setLayout(new MigLayout("", "[]", "[]"));
+		desc.setLayout(new MigLayout("", "[][grow][grow]", "[][186.00][][][][][][][][]"));
+		desc.setBackground(bgr);
+		
+		JLabel lblQuestionD = new JLabel("Question");
+		
+		JLabel lblQuestionTitleoptionaD = new JLabel("Question Title(Optional)");
+		desc.add(lblQuestionTitleoptionaD, "cell 0 0,alignx trailing");
+		
+		dTitle = new JTextField();
+		desc.add(dTitle, "cell 1 0,growx,spanx 3");
+		dTitle.setColumns(10);
+		desc.add(lblQuestionD, "cell 0 1,alignx right,aligny top");
+		
+		dText =new JTextArea (5,20);
+		
+		JScrollPane scrollPaneD = new JScrollPane(dText);
+		desc.add(scrollPaneD, "cell 1 1,span 3,grow");
+		
+		JButton btnDeleteclearQuestionTextDes = new JButton("Cancel/Clear Question Text");
+		desc.add(btnDeleteclearQuestionTextDes, "cell 2 2,alignx right");
+		
+		btnDeleteclearQuestionTextDes.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				dText.setText("");
+			}
+		});
+		
+		JButton btnSaveD = new JButton("Save");
+		desc.add(btnSaveD, "cell 0 4,alignx center,aligny center");
+		
+		JButton btnAddAnotherTruefalseD = new JButton("Add Another Description");
+		desc.add(btnAddAnotherTruefalseD, "cell 1 8,alignx center");
 		
 		
 		shortAns = new JPanel();
