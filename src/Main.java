@@ -31,14 +31,23 @@ public class Main extends JFrame{
 	private JTextField titleTextMC;
 	private JTextArea tfText;
 	private JTextArea mcText;
-	private int row =4,matchRow=2, matchRowlbl=1;
+	private JTextArea shText;
+	private JTextArea nText;
+	private int row =4,matchRow=2, matchRowlbl=1, rowSh=4;
 	private JPanel multipleChoice;
 	private JPanel matching;
+	private JPanel shortAns;
 	private ArrayList<JTextField> multiFields1;
 	private ArrayList<JTextField> multiFields2;
 	private ArrayList<JTextField> matchFields1;
 	private ArrayList<JTextField> matchFields2;
+	private ArrayList<JTextField> shFields1;
 	private JTextField matchTitle;
+	private JTextField answerSh;
+	private JTextField answerN;
+	private JTextField shTitle;
+	private JTextField nTitle;
+	private JTextField nError;
 	
 	public Main() {
 		//setting up main frame
@@ -206,15 +215,62 @@ public class Main extends JFrame{
 				multiFields2.add(field2);
 			}
 		});
+		lblQuestion.setHorizontalAlignment(SwingConstants.RIGHT);
 		
-		
-		JPanel shortAns = new JPanel();
-		tabbedPane.addTab("Short Answer", null, shortAns, null);
-		shortAns.setLayout(new MigLayout("", "[]", "[]"));
 		
 		JPanel numer = new JPanel();
 		tabbedPane.addTab("Numerical", null, numer, null);
-		numer.setLayout(new MigLayout("", "[]", "[]"));
+		numer.setLayout(new MigLayout("", "[][grow][grow]", "[][186.00][][][][][][][][][][][][]"));
+		
+		numer.setBackground(bgr);
+		
+		JLabel lblQuestionN = new JLabel("Question");
+		
+		JLabel lblQuestionTitleoptionalN = new JLabel("Question Title(Optional)");
+		numer.add(lblQuestionTitleoptionalN, "cell 0 0,alignx trailing");
+		
+		nTitle = new JTextField();
+		numer.add(nTitle, "cell 1 0,growx,spanx 3");
+		nTitle.setColumns(10);
+		numer.add(lblQuestionN, "cell 0 1,alignx right,aligny top");
+		
+		nText =new JTextArea (5,20);
+		
+		JScrollPane scrollPaneN = new JScrollPane(nText);
+		numer.add(scrollPaneN, "cell 1 1,span 3,grow");
+		
+		JButton btnDeleteclearQuestionTextN = new JButton("Cancel/Clear Question Text");
+		numer.add(btnDeleteclearQuestionTextN, "cell 2 2,alignx right");
+		
+		//clear text action
+		btnDeleteclearQuestionTextN.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				nText.setText("");		
+			}
+		});
+		
+		JLabel lblCorrectAnswerN = new JLabel("  Correct Answer");
+		numer.add(lblCorrectAnswerN, "flowx,cell 0 3,alignx trailing");
+		
+		answerN= new JTextField();
+		numer.add(answerN, "cell 1 3 2 1,growx");
+		answerN.setColumns(10);
+		
+		JLabel lblErrorMarginoptional = new JLabel("Error Margin(optional)");
+		numer.add(lblErrorMarginoptional, "cell 0 4,alignx trailing");
+		
+		nError = new JTextField();
+		numer.add(nError, "cell 1 4");
+		nError.setColumns(10);
+		
+		
+		JButton btnSaveN= new JButton("Save");
+		numer.add(btnSaveN, "cell 0 5,alignx center");
+		
+		JButton btnAddAnotherMultipleN = new JButton("Add Another Multiple Choice Question");
+		numer.add(btnAddAnotherMultipleN, "cell 1 8,alignx center");
+		
+		
 		
 		JPanel calc = new JPanel();
 		tabbedPane.addTab("Calculated", null, calc, null);
@@ -227,6 +283,63 @@ public class Main extends JFrame{
 		JPanel desc = new JPanel();
 		tabbedPane.addTab("Description", null, desc, null);
 		desc.setLayout(new MigLayout("", "[]", "[]"));
+		
+		
+		shortAns = new JPanel();
+		tabbedPane.addTab("Short Answer", null, shortAns, null);
+		shortAns.setLayout(new MigLayout("", "[][grow][grow]", "[][186.00][][][][][][][][][][][][]"));
+		shortAns.setBackground(bgr);
+		
+		JLabel lblQuestionSh = new JLabel("Question");
+		
+		JLabel lblQuestionTitleoptional_1 = new JLabel("Question Title(Optional)");
+		shortAns.add(lblQuestionTitleoptional_1, "cell 0 0,alignx trailing");
+		
+		shTitle = new JTextField();
+		shortAns.add(shTitle, "cell 1 0,growx,spanx 3");
+		shTitle.setColumns(10);
+		shortAns.add(lblQuestionSh, "cell 0 1,alignx right,aligny top");
+		
+		shText =new JTextArea (5,20);
+		
+		JScrollPane scrollPaneSh = new JScrollPane(shText);
+		shortAns.add(scrollPaneSh, "cell 1 1,span 3,grow");
+		
+		JButton btnDeleteclearQuestionText = new JButton("Cancel/Clear Question Text");
+		shortAns.add(btnDeleteclearQuestionText, "cell 2 2,alignx right");
+		
+		JLabel lblCorrectAnswerSh = new JLabel("  Correct Answer");
+		shortAns.add(lblCorrectAnswerSh, "flowx,cell 0 3,alignx trailing");
+		
+		answerSh = new JTextField();
+		shortAns.add(answerSh, "cell 1 3 2 1,growx");
+		answerSh.setColumns(10);
+		
+		JButton btnAddAnswerSh = new JButton("Add Answer");
+		shortAns.add(btnAddAnswerSh, "cell 0 4");
+		
+		JButton btnSaveSh= new JButton("Save");
+		shortAns.add(btnSaveSh, "cell 0 "+rowSh+2+",alignx center");
+		
+		JButton btnAddAnotherMultipleSh = new JButton("Add Another Multiple Choice Question");
+		shortAns.add(btnAddAnotherMultipleSh, "cell 1 "+rowSh+5+",alignx center");
+		
+		btnAddAnswerSh.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				shFields1 = new ArrayList<JTextField>();
+				JTextField field1 = new JTextField();
+				shortAns.add(field1, "cell 1 "+rowSh+",grow,spanx 2");
+				field1.setColumns(10);
+				shFields1.add(field1);
+				rowSh++;
+				repaint();
+			}
+		});
+		btnDeleteclearQuestionText.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				shText.setText("");
+			}
+		});
 	}
 
 	/**
