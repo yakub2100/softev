@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Panel;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -18,7 +19,10 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -52,6 +56,8 @@ public class Main extends JFrame{
 	private JTextField nError;
 	private JTextField dTitle;
 	private JTextField eTitle;
+	private JRadioButton rdbtnTrue;
+	private JRadioButton rdbtnFalse;
 	
 	public Main() {
 		//setting up main frame
@@ -95,8 +101,8 @@ public class Main extends JFrame{
 		trueFalse.add(btnCancelclearQuestionText, "cell 2 2");
 		
 		ButtonGroup rb1 = new ButtonGroup();		
-		JRadioButton rdbtnTrue = new JRadioButton("True");	
-		JRadioButton rdbtnFalse = new JRadioButton("False");
+		rdbtnTrue = new JRadioButton("True");	
+		rdbtnFalse = new JRadioButton("False");
 		rdbtnFalse.setBackground(bgr);
 		rdbtnTrue.setBackground(bgr);
 		rb1.add(rdbtnFalse);
@@ -113,6 +119,26 @@ public class Main extends JFrame{
 		btnCancelclearQuestionText.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){	
 				tfText.setText("");		
+			}
+		});
+		btnSave.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				if(!tfText.getText().equals("")){
+					if(rdbtnTrue.isSelected()||rdbtnFalse.isSelected()){
+						if(rdbtnTrue.isSelected()){
+							createTf(titleText.getText(),tfText.getText(),true);
+						}
+						else{
+							createTf(titleText.getText(),tfText.getText(),false);
+						}
+					}
+					else{
+						JOptionPane.showMessageDialog(null, "Select one of the answer buttons!");
+					}
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Question text must not be empty!");
+				}
 			}
 		});
 		
@@ -414,6 +440,75 @@ public class Main extends JFrame{
 		
 		new Main();
 
+	}
+	
+	public void createTf(String title, String question, boolean ans){
+		
+		String q;
+		if(!title.equals("")){
+			if(ans){
+				q ="::"+title+"::"+question+" {T}";
+			}
+			else{
+				q ="::"+title+"::"+question+" {F}";
+			}
+		}
+		else{
+			if(ans){
+				q =question+" {T}";
+			}
+			else{
+				q =question+" {F}";
+			}
+		}
+		appendToFile(q+"\n");	
+	}
+	
+	public void appendToFile(String s){
+		File out = new File ("output.txt");
+		StringBuffer contents = new StringBuffer("");
+		//if file exists - parse and save contnents
+		if(out.exists()){
+			try {
+				FileInputStream fs = new FileInputStream(out);
+				InputStreamReader isr = new InputStreamReader(fs);
+				BufferedReader br = new BufferedReader(isr);
+				
+				String str;
+		        while((str = br.readLine()) != null){
+		        	contents.append(str+"\n");				         
+			    }
+		        br.close();
+		        isr.close();
+		        fs.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+		}
+		//if file does not exist, create new file
+		else{
+			try {
+				out.createNewFile();				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			//write to output file
+			PrintWriter pw = new PrintWriter(out);
+			contents.append(s);
+			pw.print(contents);
+			pw.flush();
+			pw.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
