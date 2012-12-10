@@ -47,7 +47,7 @@ public class Main extends JFrame{
 	private ArrayList<JTextField> multiFields2;
 	private ArrayList<JTextField> matchFields1;
 	private ArrayList<JTextField> matchFields2;
-	private ArrayList<JTextField> shFields1;
+	private ArrayList<JTextField> shFields1 = new ArrayList<JTextField>();
 	private JTextField matchTitle;
 	private JTextField answerSh;
 	private JTextField answerN;
@@ -113,8 +113,6 @@ public class Main extends JFrame{
 		JButton btnSave = new JButton("Save");
 		trueFalse.add(btnSave, "cell 0 4,alignx center,aligny center");
 		
-		JButton btnAddAnotherTruefalse = new JButton("Add Another True/False Question");
-		trueFalse.add(btnAddAnotherTruefalse, "cell 1 10,alignx center");
 		//clear text action
 		btnCancelclearQuestionText.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){	
@@ -131,6 +129,9 @@ public class Main extends JFrame{
 						else{
 							createTf(titleText.getText(),tfText.getText(),false);
 						}
+						JOptionPane.showMessageDialog(null, "Question saved");
+						tfText.setText("");
+						titleText.setText("");
 					}
 					else{
 						JOptionPane.showMessageDialog(null, "Select one of the answer buttons!");
@@ -247,7 +248,7 @@ public class Main extends JFrame{
 		});
 		lblQuestion.setHorizontalAlignment(SwingConstants.RIGHT);
 		
-		
+		//Numerical tab
 		JPanel numer = new JPanel();
 		tabbedPane.addTab("Numerical", null, numer, null);
 		numer.setLayout(new MigLayout("", "[][grow][grow]", "[][186.00][][][][][][][][][][][][]"));
@@ -297,9 +298,33 @@ public class Main extends JFrame{
 		JButton btnSaveN= new JButton("Save");
 		numer.add(btnSaveN, "cell 0 5,alignx center");
 		
-		JButton btnAddAnotherMultipleN = new JButton("Add Another Multiple Choice Question");
-		numer.add(btnAddAnotherMultipleN, "cell 1 8,alignx center");
+		btnSaveN.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				if(!nText.getText().equals("")){
+					try{
+						Double.parseDouble(answerN.getText());
+						if(!nError.getText().equals("")){
+							Double.parseDouble(nError.getText());
+						}
+						createNum(nTitle.getText(),nText.getText(),answerN.getText(),nError.getText());
+						JOptionPane.showMessageDialog(null, "Question saved");
+						nText.setText("");
+						nTitle.setText("");
+						nError.setText("");
+						answerN.setText("");
+					}
+					catch(Exception e59){
+						JOptionPane.showMessageDialog(null, "Answer and error must be numbers!");
+					}				
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Question text must not be empty!");
+				}
+			}
+		});
 		
+		
+		//essay tab
 		JPanel essay = new JPanel();
 		tabbedPane.addTab("Essay", null, essay, null);
 		essay.setLayout(new MigLayout("", "[][grow][grow]", "[][186.00][][][][][][][][]"));
@@ -332,14 +357,22 @@ public class Main extends JFrame{
 		JButton btnSaveE = new JButton("Save");
 		essay.add(btnSaveE, "cell 0 4,alignx center,aligny center");
 		
-		JButton btnAddAnotherE = new JButton("Add Another Essay");
-		essay.add(btnAddAnotherE, "cell 1 8,alignx center");
+		btnSaveE.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				if(!eText.getText().equals("")){
+					createEssay(eTitle.getText(),eText.getText());
+					JOptionPane.showMessageDialog(null, "Question saved");
+					eText.setText("");
+					eTitle.setText("");
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Question text must not be empty!");
+				}
+			}
+		});
 		
-		
-		
-		
-		
-		
+	
+		//description tab
 		JPanel desc = new JPanel();
 		tabbedPane.addTab("Description", null, desc, null);
 		desc.setLayout(new MigLayout("", "[][grow][grow]", "[][186.00][][][][][][][][]"));
@@ -371,11 +404,22 @@ public class Main extends JFrame{
 		
 		JButton btnSaveD = new JButton("Save");
 		desc.add(btnSaveD, "cell 0 4,alignx center,aligny center");
+
+		btnSaveD.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				if(!dText.getText().equals("")){
+					createDesc(dTitle.getText(),dText.getText());
+					JOptionPane.showMessageDialog(null, "Question saved");
+					dText.setText("");
+					dTitle.setText("");
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Question text must not be empty!");
+				}
+			}
+		});
 		
-		JButton btnAddAnotherTruefalseD = new JButton("Add Another Description");
-		desc.add(btnAddAnotherTruefalseD, "cell 1 8,alignx center");
-		
-		
+		//short answer tab
 		shortAns = new JPanel();
 		tabbedPane.addTab("Short Answer", null, shortAns, null);
 		shortAns.setLayout(new MigLayout("", "[][grow][grow]", "[][186.00][][][][][][][][][][][][]"));
@@ -412,12 +456,27 @@ public class Main extends JFrame{
 		JButton btnSaveSh= new JButton("Save");
 		shortAns.add(btnSaveSh, "cell 0 "+rowSh+2+",alignx center");
 		
-		JButton btnAddAnotherMultipleSh = new JButton("Add Another Multiple Choice Question");
-		shortAns.add(btnAddAnotherMultipleSh, "cell 1 "+rowSh+5+",alignx center");
+		btnSaveSh.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				if(!shText.getText().equals("")&&!answerSh.getText().equals("")){
+					createSA(shTitle.getText(),shText.getText());
+					JOptionPane.showMessageDialog(null, "Question saved");
+					shText.setText("");
+					shTitle.setText("");
+					answerSh.setText("");
+					shFields1=new ArrayList<JTextField>();
+					rowSh=4;
+					repaint();
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Question and answer text must not be empty!");
+				}
+			}
+		});
 		
 		btnAddAnswerSh.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){	
-				shFields1 = new ArrayList<JTextField>();
+
 				JTextField field1 = new JTextField();
 				shortAns.add(field1, "cell 1 "+rowSh+",grow,spanx 2");
 				field1.setColumns(10);
@@ -463,7 +522,70 @@ public class Main extends JFrame{
 		}
 		appendToFile(q+"\n");	
 	}
-	
+	public void createNum(String title, String question, String ans, String error){
+		
+		String q;
+		if(!title.equals("")){
+			if(error.equals("")){
+				q ="::"+title+"::"+question+" {#"+ans+"}";
+			}
+			else{
+				q ="::"+title+"::"+question+" {#"+ans+":"+error+"}";
+			}
+		}
+		else{
+			if(error.equals("")){
+				q =question+" {#"+ans+"}";
+			}
+			else{
+				q =question+" {#"+ans+":"+error+"}";
+			}
+		}
+		appendToFile(q+"\n");	
+	}
+	public void createDesc(String title, String question){
+		
+		String q;
+		if(!title.equals("")){		
+			q ="::"+title+"::"+question;
+		}
+		else{
+			q =question;
+		}
+		appendToFile(q+"\n");
+	}
+	public void createEssay(String title, String question){
+		
+		String q;
+		if(!title.equals("")){		
+			q ="::"+title+"::"+question+"{}";
+		}
+		else{
+			q =question+"{}";
+		}
+		appendToFile(q+"\n");
+	}
+	public void createSA(String title, String question){
+		
+		StringBuffer q= new StringBuffer("");
+		if(!title.equals("")){		
+			q.append("::"+title+"::"+question+"{="+answerSh.getText()+" ");
+		}
+		else{
+			q.append(question+"{="+answerSh.getText()+" ");
+		}
+		
+		for(JTextField f:shFields1){
+			if(!f.getText().equals("")){
+				q.append("="+f.getText()+" ");	
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Empty answer field,this empty answer will not be saved");
+			}
+		}
+		q.append("}");
+		appendToFile(q+"\n");	
+	}
 	public void appendToFile(String s){
 		File out = new File ("output.txt");
 		StringBuffer contents = new StringBuffer("");

@@ -1,0 +1,16 @@
+::cc::c {T}
+::Q1::describe
+describe b
+describe c
+::10::wtf {T}
+::ff::sdfwf{}
+::fff::fsdfws {T}
+::fff::ergrtu {T}
+::dfgef::fhtr {F}
+::num::munmun {#12:2}
+::num::wewr {#5}
+gerterg {#4}
+sdfgegh {#5:1}
+::qq::sssss{=1 }
+defer{=f =g }
+::efg::fregreg{=g =h =z }
