@@ -34,20 +34,22 @@ public class Main extends JFrame{
 	private JTextField titleText;
 	private JTextField titleTextMC;
 	private JTextArea tfText;
+	private JTextArea matchText;
 	private JTextArea mcText;
 	private JTextArea shText;
 	private JTextArea eText;
 	private JTextArea nText;
 	private JTextArea dText;
-	private int row =6,matchRow=2, matchRowlbl=1, rowSh=4;
+	private int row =6,matchRow=3, matchRowlbl=1, rowSh=4;
 	private JPanel multipleChoice;
 	private JPanel matching;
 	private JPanel shortAns;
-	private ArrayList<JTextField> multiFields1= new ArrayList<JTextField>();;
-	private ArrayList<JTextField> multiFields2= new ArrayList<JTextField>();;
-	private ArrayList<JTextField> matchFields1= new ArrayList<JTextField>();;
-	private ArrayList<JTextField> matchFields2= new ArrayList<JTextField>();;
+	private ArrayList<JTextField> multiFields1= new ArrayList<JTextField>();
+	private ArrayList<JTextField> multiFields2= new ArrayList<JTextField>();
+	private ArrayList<JTextField> matchFields1= new ArrayList<JTextField>();
+	private ArrayList<JTextField> matchFields2= new ArrayList<JTextField>();
 	private ArrayList<JTextField> shFields1 = new ArrayList<JTextField>();
+	private ArrayList<JLabel> mLabels = new ArrayList<JLabel>();
 	private JTextField matchTitle;
 	private JTextField answerSh;
 	private JTextField answerN;
@@ -146,6 +148,7 @@ public class Main extends JFrame{
 			}
 		});
 		
+		//matching tab
 		matching = new JPanel();
 		matching.setBackground(bgr);
 		tabbedPane.addTab("Matching", null, matching, null);
@@ -158,14 +161,47 @@ public class Main extends JFrame{
 		matching.add(matchTitle, "cell 1 0,growx,spanx 6");
 		matchTitle.setColumns(10);
 		
+		JLabel lblQuestionMa = new JLabel("Question");
+		lblQuestionMa.setHorizontalAlignment(SwingConstants.RIGHT);
+		matching.add(lblQuestion, "cell 0 1,alignx right,aligny top");
+		
+		matchText =new JTextArea (5,20);
+		
+		JScrollPane scrollPaneMA = new JScrollPane(matchText);
+		matching.add(scrollPaneMA, "cell 1 1,span 5,grow");
+		
 		JButton btnAddQa = new JButton("Add Q&A");
 		matching.add(btnAddQa, "cell 0 2,alignx center");
 		
 		JButton btnSave_2 = new JButton("Save");
 		matching.add(btnSave_2, "cell 0 "+matchRow+2+",alignx center");
+		btnSave_2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				if(!matchText.getText().equals("")){
+					createMatch(matchTitle.getText(), matchText.getText());
+					JOptionPane.showMessageDialog(null, "Question saved");
+					matchText.setText("");
+					matchTitle.setText("");
+					for(int i =0;i<matchFields1.size();i++){						
+						matching.remove(matchFields1.get(i));		
+						matching.remove(matchFields2.get(i));	
+					}
+					for(int i =0;i<mLabels.size();i++){						
+						matching.remove(mLabels.get(i));			
+					}
+					matchFields1=new ArrayList<JTextField>();
+					matchFields2=new ArrayList<JTextField>();
+					matchRow=3;
+	
+					repaint();
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Question text must not be empty!");
+				}
+			}
+		});
 		
-		JButton btnAddAnotherMatching = new JButton("Add Another Matching Question");
-		matching.add(btnAddAnotherMatching, "cell 2 "+matchRow+5+",alignx center");
+
 		//add questions action
 		btnAddQa.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){	
@@ -183,7 +219,8 @@ public class Main extends JFrame{
 				JTextField field2 = new JTextField();
 				matching.add(field2, "cell 4 "+matchRow+",growx");
 				field2.setColumns(10);
-						
+				mLabels.add(label_1);
+				mLabels.add(label);
 				repaint();
 				matchRow++;
 				matchRowlbl+=2;
@@ -649,6 +686,30 @@ public class Main extends JFrame{
 				if(!c.getText().equals("")){
 					q.append("#"+c.getText()+"\n");
 				}
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Empty answer field,this empty answer will not be saved");
+			}
+		}
+		q.append("}");
+		appendToFile(q+"\n");	
+	}
+	public void createMatch(String title, String question){
+		
+		StringBuffer q= new StringBuffer("");
+		if(!title.equals("")){		
+			q.append("::"+title+"::"+question+"{\n");		
+		}
+		else{
+			q.append(question+"{\n");
+		}
+		
+		for(int i=0;i<matchFields1.size();i++){
+			JTextField qu = matchFields1.get(i);
+			JTextField c = matchFields2.get(i);
+			if(!qu.getText().equals("")&&!c.getText().equals("")){
+				q.append("="+qu.getText()+" ");
+				q.append("->"+c.getText()+"\n");			
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "Empty answer field,this empty answer will not be saved");
