@@ -39,14 +39,14 @@ public class Main extends JFrame{
 	private JTextArea eText;
 	private JTextArea nText;
 	private JTextArea dText;
-	private int row =4,matchRow=2, matchRowlbl=1, rowSh=4;
+	private int row =6,matchRow=2, matchRowlbl=1, rowSh=4;
 	private JPanel multipleChoice;
 	private JPanel matching;
 	private JPanel shortAns;
-	private ArrayList<JTextField> multiFields1;
-	private ArrayList<JTextField> multiFields2;
-	private ArrayList<JTextField> matchFields1;
-	private ArrayList<JTextField> matchFields2;
+	private ArrayList<JTextField> multiFields1= new ArrayList<JTextField>();;
+	private ArrayList<JTextField> multiFields2= new ArrayList<JTextField>();;
+	private ArrayList<JTextField> matchFields1= new ArrayList<JTextField>();;
+	private ArrayList<JTextField> matchFields2= new ArrayList<JTextField>();;
 	private ArrayList<JTextField> shFields1 = new ArrayList<JTextField>();
 	private JTextField matchTitle;
 	private JTextField answerSh;
@@ -58,6 +58,9 @@ public class Main extends JFrame{
 	private JTextField eTitle;
 	private JRadioButton rdbtnTrue;
 	private JRadioButton rdbtnFalse;
+	private JTextField multiCorrect;
+	private JTextField corCom;
+	private JLabel wrongLabel;
 	
 	public Main() {
 		//setting up main frame
@@ -166,8 +169,6 @@ public class Main extends JFrame{
 		//add questions action
 		btnAddQa.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){	
-				matchFields1 = new ArrayList<JTextField>();
-				matchFields2 = new ArrayList<JTextField>();
 				
 				JLabel label = new JLabel(matchRowlbl+"");
 				matching.add(label, "cell 1 "+matchRow+",alignx trailing");
@@ -190,10 +191,11 @@ public class Main extends JFrame{
 				matchFields2.add(field2);
 			}
 		});
-				
+		
+		//multiple choice
 		multipleChoice = new JPanel();
 		tabbedPane.addTab("Multiple Choice", null, multipleChoice, null);
-		multipleChoice.setLayout(new MigLayout("", "[][805.00,grow][grow]", "[][186.00][][][][][][][][][]"));
+		multipleChoice.setLayout(new MigLayout("", "[][grow][grow]", "[][186.00][][][][][][][][][][][][][][][][][]"));
 		multipleChoice.setBackground(bgr);
 		JLabel lblQuestionTitleMC = new JLabel("Question Title (Optional)");
 		multipleChoice.add(lblQuestionTitleMC, "cell 0 0,alignx trailing");
@@ -212,27 +214,14 @@ public class Main extends JFrame{
 		JButton btnChancelclearQuestionText = new JButton("Chancel/Clear Question Text");
 		multipleChoice.add(btnChancelclearQuestionText, "cell 1 2 1 2,alignx right,spanx 2");
 		
-		JButton btnAddAnswer = new JButton("Add Answer");
+		JButton btnAddAnswer = new JButton("Add Wrong Answer");
 		multipleChoice.add(btnAddAnswer, "cell 0 4,alignx center");
-		
-		
-		
-		JButton btnSave_1 = new JButton("Save");
-		multipleChoice.add(btnSave_1, "cell 0 "+row+2+",alignx center");
-		
-		JButton btnAddAnotherMultiple = new JButton("Add Another Multiple Choice Question");
-		multipleChoice.add(btnAddAnotherMultiple, "cell 1 "+row+5+",alignx center");
-		//clear text action
-		btnChancelclearQuestionText.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){	
-				mcText.setText("");		
-			}
-		});
 		
 		btnAddAnswer.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){	
-				multiFields1 = new ArrayList<JTextField>();
-				multiFields2 = new ArrayList<JTextField>();
+
+				wrongLabel = new JLabel("Wrong Answer");
+				multipleChoice.add(wrongLabel, "cell 0 "+row+",alignx trailing");
 				JTextField field1 = new JTextField();
 				multipleChoice.add(field1, "cell 1 "+row+",grow");
 				field1.setColumns(10);
@@ -246,7 +235,57 @@ public class Main extends JFrame{
 				multiFields2.add(field2);
 			}
 		});
+		
+		JLabel lblComment = new JLabel("Comment(Optional)");
+		multipleChoice.add(lblComment, "cell 2 4");
+		
+		JLabel lblCorrectanswer = new JLabel("Correct Answer");
+		multipleChoice.add(lblCorrectanswer, "cell 0 5,alignx trailing");
+		
+		multiCorrect = new JTextField();
+		multipleChoice.add(multiCorrect, "cell 1 5,growx");
+		multiCorrect.setColumns(10);
+		
+		corCom = new JTextField();
+		multipleChoice.add(corCom, "cell 2 5,growx");
+		corCom.setColumns(10);
+	
+		JButton btnSave_1 = new JButton("Save");
+		multipleChoice.add(btnSave_1, "cell 0 "+row+5+",alignx center");
+		btnSave_1.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				if(!mcText.getText().equals("")&&!multiCorrect.getText().equals("")){
+					createMulti(titleTextMC.getText(),mcText.getText(),multiCorrect.getText(),corCom.getText());
+					JOptionPane.showMessageDialog(null, "Question saved");
+					mcText.setText("");
+					titleTextMC.setText("");
+					multiCorrect.setText("");
+					corCom.setText("");
+					for(int i =0;i<multiFields1.size();i++){
+						JTextField f = multiFields1.get(i);
+						multipleChoice.remove(multiFields1.get(i));		
+						multipleChoice.remove(multiFields2.get(i));	
+					}
+					multiFields1=new ArrayList<JTextField>();
+					multiFields2=new ArrayList<JTextField>();
+					row=6;
+					multipleChoice.remove(wrongLabel);
+					repaint();
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Question and answer text must not be empty!");
+				}
+			}
+		});
+		
+		//clear text action
+		btnChancelclearQuestionText.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){	
+				mcText.setText("");		
+			}
+		});
 		lblQuestion.setHorizontalAlignment(SwingConstants.RIGHT);
+		
 		
 		//Numerical tab
 		JPanel numer = new JPanel();
@@ -464,6 +503,9 @@ public class Main extends JFrame{
 					shText.setText("");
 					shTitle.setText("");
 					answerSh.setText("");
+					for(JTextField f : shFields1){
+						shortAns.remove(f);				
+					}
 					shFields1=new ArrayList<JTextField>();
 					rowSh=4;
 					repaint();
@@ -543,6 +585,7 @@ public class Main extends JFrame{
 		}
 		appendToFile(q+"\n");	
 	}
+	
 	public void createDesc(String title, String question){
 		
 		String q;
@@ -586,6 +629,35 @@ public class Main extends JFrame{
 		q.append("}");
 		appendToFile(q+"\n");	
 	}
+	public void createMulti(String title, String question, String ans, String com){
+		
+		StringBuffer q= new StringBuffer("");
+		if(!title.equals("")){		
+			q.append("::"+title+"::"+question+"{\n="+ans+"\n");		
+		}
+		else{
+			q.append(question+"{\n="+ans+"\n");
+		}
+		//append correct comment
+		if(!com.equals(""))q.append("#"+com+"\n");
+		
+		for(int i=0;i<multiFields1.size();i++){
+			JTextField qu = multiFields1.get(i);
+			JTextField c = multiFields2.get(i);
+			if(!qu.getText().equals("")){
+				q.append("~"+qu.getText()+"\n");
+				if(!c.getText().equals("")){
+					q.append("#"+c.getText()+"\n");
+				}
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Empty answer field,this empty answer will not be saved");
+			}
+		}
+		q.append("}");
+		appendToFile(q+"\n");	
+	}
+	
 	public void appendToFile(String s){
 		File out = new File ("output.txt");
 		StringBuffer contents = new StringBuffer("");
